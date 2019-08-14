@@ -26,11 +26,14 @@ let PointsController = class PointsController {
         const users = await this.pointService.getPoint();
         return users;
     }
-    getUser(userCpf) {
-        return this.pointService.getSinglePoint(userCpf);
+    getPoint(PointCpf) {
+        return this.pointService.getSinglePoint(PointCpf);
     }
-    async updateUser(timeArrive, timeDeparture, cpf) {
-        await this.pointService.updatePoint(timeArrive, timeDeparture, cpf);
+    getPointOpen(PointCpf) {
+        return this.pointService.getSinglePointOpen(PointCpf);
+    }
+    async closePoint(timeArrive, timeDeparture, cpf) {
+        await this.pointService.closePoint(timeDeparture, cpf);
         return null;
     }
     async removeProduct(userId) {
@@ -59,16 +62,23 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], PointsController.prototype, "getUser", null);
+], PointsController.prototype, "getPoint", null);
 __decorate([
-    common_1.Put(':cpf'),
+    common_1.Get(':cpf/open'),
+    __param(0, common_1.Param('cpf')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], PointsController.prototype, "getPointOpen", null);
+__decorate([
+    common_1.Put(':cpf/open'),
     __param(0, common_1.Body('timeArrive')),
     __param(1, common_1.Body('timeDeparture')),
     __param(2, common_1.Param('cpf')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
-], PointsController.prototype, "updateUser", null);
+], PointsController.prototype, "closePoint", null);
 __decorate([
     common_1.Delete(':cpf'),
     __param(0, common_1.Param('cpf')),

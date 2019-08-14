@@ -10,11 +10,12 @@ export declare class PointsController {
         timeDeparture: string;
         cpf: string;
     }[]>;
-    getUser(userCpf: string): Promise<{
+    getPoint(PointCpf: string): Promise<any>;
+    getPointOpen(PointCpf: string): Promise<{
         timeArrive: string;
         timeDeparture: string;
         cpf: string;
     }>;
-    updateUser(timeArrive: string, timeDeparture: string, cpf: string): Promise<any>;
+    closePoint(timeArrive: string, timeDeparture: string, cpf: string): Promise<any>;
     removeProduct(userId: string): Promise<any>;
 }

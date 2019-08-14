@@ -1138,19 +1138,19 @@
         "signature": "fecf746c6b4b6a65259e75ff2bd7a16258ede9f11a2e11cfd3b3c0ee5b9e6adb"
       },
       "c:/users/zupper/documents/sistemapontos/src/points/points.service.ts": {
-        "version": "5af3f0ca759dae85071f9777b3dea614acad9634ca27530dd8adcc1812d413fb",
-        "signature": "b08238d23057ee801c324318282b38dec77128d326029bba819ec93d4b84466b"
+        "version": "30dc699edbfb3d588d010c5147efd1e455ca14a358010d289222dcc0bc95cf79",
+        "signature": "2bac8fa111e0ee105bf39354aa2d145a09332d8408c47f7d7114468ca48aab17"
       },
       "c:/users/zupper/documents/sistemapontos/src/points/points.controller.ts": {
-        "version": "e177a439f943835989010b92a4aa0360b5e5aee0ace62be529830783c75b789c",
-        "signature": "588f9dc23b6b09f580ee96dfed5fe62fb37f60f4774516d5ac5f84065e5c7aef"
+        "version": "734e0a9ce4d52a01193223de2903f1a4ff8d73b344185db1311b83fa7e882b19",
+        "signature": "97ec980775a1092b91c8bc08eb5af12810088bf30b8adaf42a9713bacd2a33ef"
       },
       "c:/users/zupper/documents/sistemapontos/src/points/points.module.ts": {
         "version": "16340a1cb35c99c16a14fffacf20e26d47fe046bb8635dde0fbd8ae775c1cdea",
         "signature": "92277f9591be62cf00ebc1fb926a90ef5b07aa08242c8eda2e2d1030faa6dc16"
       },
       "c:/users/zupper/documents/sistemapontos/src/app.module.ts": {
-        "version": "30ae1f74d15c403808959ede942a12d03cfcefae4ab017a50084d5e43156c1f7",
+        "version": "4e1b474fcdfe9d36cfbd496fd9a03b79d73d22d3a00ad395447f1cf0389d1c87",
         "signature": "9fc7f7b6ad854404973b8cba8e6d883f758237991968e9a3965d716d46f1da88"
       },
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/adapters/http-adapter.d.ts": {
@@ -1262,7 +1262,7 @@
         "signature": "2608cfd623840916e664e68c3dc5eb4347ccae822f808d899bf00e73cbab2bfe"
       },
       "c:/users/zupper/documents/sistemapontos/src/main.ts": {
-        "version": "3c8967198a459fe0868276c735fb4ecbe75c3ed2bbda02d4dcee787c5c448528",
+        "version": "68cc936996c950ca5bc97ab0be91765a5403f091c61421bd575c8adad552c162",
         "signature": "f761c91419d0a89422a0004ef1a92929dd4d2d5e5c16758654d8b0467d1998c6"
       },
       "c:/users/zupper/documents/sistemapontos/node_modules/@babel/types/lib/index.d.ts": {
@@ -5715,10 +5715,7 @@
       "c:/users/zupper/documents/sistemapontos/src/users/users.service.ts",
       "c:/users/zupper/documents/sistemapontos/src/users/users.controller.ts",
       "c:/users/zupper/documents/sistemapontos/src/users/users.module.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.service.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.controller.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.module.ts",
-      "c:/users/zupper/documents/sistemapontos/src/app.module.ts",
+      "c:/users/zupper/documents/sistemapontos/src/points/points.model.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/adapters/http-adapter.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/adapters/index.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/constants.d.ts",
@@ -5773,7 +5770,10 @@
       "c:/users/zupper/documents/sistemapontos/node_modules/@types/superagent/index.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@types/supertest/index.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@types/yargs/index.d.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.model.ts"
+      "c:/users/zupper/documents/sistemapontos/src/points/points.service.ts",
+      "c:/users/zupper/documents/sistemapontos/src/points/points.controller.ts",
+      "c:/users/zupper/documents/sistemapontos/src/points/points.module.ts",
+      "c:/users/zupper/documents/sistemapontos/src/app.module.ts"
     ]
   },
   "version": "3.4.3"
