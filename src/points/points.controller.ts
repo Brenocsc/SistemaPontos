@@ -52,17 +52,17 @@ export class PointsController {
         await this.pointService.closePoint(timeDeparture, cpf);
         return null;
     }
-    /*
-    @Put(':cpf')
+    
+    @Put(':cpf/:timeArrive')
     async updatePoint(
-        @Body('timeArrive') timeArrive : string,
-        @Body('timeDeparture') timeDeparture : string,
+        @Param('timeArrive') timeArrive : string,
         @Param('cpf') cpf : string,
+        @Body('newTime') newTime: string,
         ){
-            await this.pointService.updatePoint(timeArrive, cpf);
+            await this.pointService.updatePoint(timeArrive, cpf, newTime);
             return null;
         }
-        */
+        
 
     @Delete(':cpf')
     async removeProduct(

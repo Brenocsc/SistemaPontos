@@ -36,6 +36,10 @@ let PointsController = class PointsController {
         await this.pointService.closePoint(timeDeparture, cpf);
         return null;
     }
+    async updatePoint(timeArrive, cpf, newTime) {
+        await this.pointService.updatePoint(timeArrive, cpf, newTime);
+        return null;
+    }
     async removeProduct(userId) {
         await this.pointService.deletePoint(userId);
         return null;
@@ -79,6 +83,15 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], PointsController.prototype, "closePoint", null);
+__decorate([
+    common_1.Put(':cpf/:timeArrive'),
+    __param(0, common_1.Param('timeArrive')),
+    __param(1, common_1.Param('cpf')),
+    __param(2, common_1.Body('newTime')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], PointsController.prototype, "updatePoint", null);
 __decorate([
     common_1.Delete(':cpf'),
     __param(0, common_1.Param('cpf')),

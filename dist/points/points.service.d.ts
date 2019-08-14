@@ -15,8 +15,10 @@ export declare class PointsService {
         timeDeparture: string;
         cpf: string;
     }>;
+    updatePoint(timeArrive: string, cpf: string, newTime: string): Promise<void>;
     closePoint(timeDeparture: string, cpf: string): Promise<void>;
     deletePoint(cpf: string): Promise<void>;
     private findPoint;
     private findPointOpen;
+    private findPointArrive;
 }

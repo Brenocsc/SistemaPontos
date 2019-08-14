@@ -64,23 +64,27 @@ export class PointsService {
         
     }
     */
-    /*
-    async updatePoint(timeArrive: string, cpf: string) {
-        const updatedPoint = await this.findPoint(cpf);
-        if (timeArrive) {
-            updatedPoint.timeArrive = timeArrive;
-        }
-        if (timeDeparture) {
-            updatedPoint.timeDeparture = timeDeparture;
-        }
-        if (cpf) {
-            updatedPoint.cpf = cpf;
+
+    async updatePoint(timeArrive: string, cpf: string, newTime: string) {
+        const updatedPoint = await this.findPointArrive(timeArrive, cpf);
+        /*
+        updatedPoint.map((point) => {
+            if (timeArrive) {
+
+                if (point.timeArrive === timeArrive) {
+                    updatedPoint.timeArrive = timeArrive;
+                }
+            }
+        });
+        */
+
+        if(newTime){
+            updatedPoint.timeArrive = newTime;
         }
 
         updatedPoint.save();
-
     }
-    */
+
 
     async closePoint(timeDeparture: string, cpf: string) {
         const updatedPoint = await this.findPointOpen(cpf);
@@ -122,6 +126,22 @@ export class PointsService {
 
         try {
             point = await this.pointModel.findOne({ cpf, timeDeparture: null }).exec();
+        } catch (error) {
+            throw new NotFoundException("Could not find point opened");
+        }
+
+        if (!point) {
+            throw new NotFoundException("Could not find point opened");
+        }
+
+        return point;
+    }
+
+    private async findPointArrive(timeArrive: string, cpf: string): Promise<Point> {
+        let point;
+
+        try {
+            point = await this.pointModel.findOne({ cpf, timeArrive: timeArrive }).exec();
         } catch (error) {
             throw new NotFoundException("Could not find point opened");
         }

@@ -52,6 +52,13 @@ let PointsService = class PointsService {
             cpf: point.cpf,
         };
     }
+    async updatePoint(timeArrive, cpf, newTime) {
+        const updatedPoint = await this.findPointArrive(timeArrive, cpf);
+        if (newTime) {
+            updatedPoint.timeArrive = newTime;
+        }
+        updatedPoint.save();
+    }
     async closePoint(timeDeparture, cpf) {
         const updatedPoint = await this.findPointOpen(cpf);
         if (timeDeparture) {
@@ -82,6 +89,19 @@ let PointsService = class PointsService {
         let point;
         try {
             point = await this.pointModel.findOne({ cpf, timeDeparture: null }).exec();
+        }
+        catch (error) {
+            throw new common_1.NotFoundException("Could not find point opened");
+        }
+        if (!point) {
+            throw new common_1.NotFoundException("Could not find point opened");
+        }
+        return point;
+    }
+    async findPointArrive(timeArrive, cpf) {
+        let point;
+        try {
+            point = await this.pointModel.findOne({ cpf, timeArrive: timeArrive }).exec();
         }
         catch (error) {
             throw new common_1.NotFoundException("Could not find point opened");
