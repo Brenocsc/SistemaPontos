@@ -23,6 +23,7 @@ export class PointsService {
     async getPoint() {
         const points = await this.pointModel.find().exec();
         return points.map((point) => ({
+            _id: point._id,
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
             cpf: point.cpf,
@@ -32,16 +33,20 @@ export class PointsService {
     async getSinglePoint(cpf: string) {
         //const point = await this.pointModel.find({cpf}).exec();
         const point = await this.findPoint(cpf);
-        return point.map((point) => ({
+        const Points = point.map((point) => ({
+            _id: point._id,
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
             cpf: point.cpf,
         }));
+
+        return { Points }
     }
 
     async getSinglePointOpen(cpf: string) {
         const point = await this.findPointOpen(cpf);
         return {
+            _id: point._id,
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
             cpf: point.cpf,
@@ -65,8 +70,8 @@ export class PointsService {
     }
     */
 
-    async updatePoint(timeArrive: string, cpf: string, newTime: string) {
-        const updatedPoint = await this.findPointArrive(timeArrive, cpf);
+    async updatePoint(id: string, cpf: string, newTimeArrive: string, newTimeDeparture: string) {
+        const updatedPoint = await this.findPointArrive(id, cpf);
         /*
         updatedPoint.map((point) => {
             if (timeArrive) {
@@ -78,8 +83,12 @@ export class PointsService {
         });
         */
 
-        if(newTime){
-            updatedPoint.timeArrive = newTime;
+        if(newTimeArrive){
+            updatedPoint.timeArrive = newTimeArrive;
+        }
+
+        if(newTimeDeparture){
+            updatedPoint.timeDeparture = newTimeDeparture;
         }
 
         updatedPoint.save();
@@ -137,11 +146,11 @@ export class PointsService {
         return point;
     }
 
-    private async findPointArrive(timeArrive: string, cpf: string): Promise<Point> {
+    private async findPointArrive(id: string, cpf: string): Promise<Point> {
         let point;
 
         try {
-            point = await this.pointModel.findOne({ cpf, timeArrive: timeArrive }).exec();
+            point = await this.pointModel.findOne({ cpf, _id: id }).exec();
         } catch (error) {
             throw new NotFoundException("Could not find point opened");
         }

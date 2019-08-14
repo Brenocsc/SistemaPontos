@@ -32,12 +32,12 @@ let PointsController = class PointsController {
     getPointOpen(PointCpf) {
         return this.pointService.getSinglePointOpen(PointCpf);
     }
-    async closePoint(timeArrive, timeDeparture, cpf) {
+    async closePoint(timeDeparture, cpf) {
         await this.pointService.closePoint(timeDeparture, cpf);
         return null;
     }
-    async updatePoint(timeArrive, cpf, newTime) {
-        await this.pointService.updatePoint(timeArrive, cpf, newTime);
+    async updatePoint(pointId, cpf, newTimeArrive, newTimeDeparture) {
+        await this.pointService.updatePoint(pointId, cpf, newTimeArrive, newTimeDeparture);
         return null;
     }
     async removeProduct(userId) {
@@ -76,20 +76,20 @@ __decorate([
 ], PointsController.prototype, "getPointOpen", null);
 __decorate([
     common_1.Put(':cpf/open'),
-    __param(0, common_1.Body('timeArrive')),
-    __param(1, common_1.Body('timeDeparture')),
-    __param(2, common_1.Param('cpf')),
+    __param(0, common_1.Body('timeDeparture')),
+    __param(1, common_1.Param('cpf')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], PointsController.prototype, "closePoint", null);
 __decorate([
-    common_1.Put(':cpf/:timeArrive'),
-    __param(0, common_1.Param('timeArrive')),
+    common_1.Put(':cpf/:id'),
+    __param(0, common_1.Param('id')),
     __param(1, common_1.Param('cpf')),
-    __param(2, common_1.Body('newTime')),
+    __param(2, common_1.Body('newTimeArrive')),
+    __param(3, common_1.Body('newTimeDeparture')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], PointsController.prototype, "updatePoint", null);
 __decorate([

@@ -6,17 +6,21 @@ export declare class PointsController {
         id: string;
     }>;
     getAllUsers(): Promise<{
+        _id: any;
         timeArrive: string;
         timeDeparture: string;
         cpf: string;
     }[]>;
-    getPoint(PointCpf: string): Promise<any>;
+    getPoint(PointCpf: string): Promise<{
+        Points: any;
+    }>;
     getPointOpen(PointCpf: string): Promise<{
+        _id: any;
         timeArrive: string;
         timeDeparture: string;
         cpf: string;
     }>;
-    closePoint(timeArrive: string, timeDeparture: string, cpf: string): Promise<any>;
-    updatePoint(timeArrive: string, cpf: string, newTime: string): Promise<any>;
+    closePoint(timeDeparture: string, cpf: string): Promise<any>;
+    updatePoint(pointId: string, cpf: string, newTimeArrive: string, newTimeDeparture: string): Promise<any>;
     removeProduct(userId: string): Promise<any>;
 }
