@@ -9,12 +9,14 @@ export declare class PointsService {
         timeDeparture: string;
         cpf: string;
     }[]>;
-    getSinglePoint(cpf: string): Promise<{
+    getSinglePoint(cpf: string): Promise<any>;
+    getSinglePointOpen(cpf: string): Promise<{
         timeArrive: string;
         timeDeparture: string;
         cpf: string;
     }>;
-    updatePoint(timeArrive: string, timeDeparture: string, cpf: string): Promise<void>;
+    closePoint(timeDeparture: string, cpf: string): Promise<void>;
     deletePoint(cpf: string): Promise<void>;
     private findPoint;
+    private findPointOpen;
 }

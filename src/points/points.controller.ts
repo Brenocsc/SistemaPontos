@@ -3,45 +3,71 @@ import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common'
 import { PointsService } from './points.service';
 
 @Controller('points')
-export class PointsController{
-    constructor(private readonly pointService : PointsService){}
+export class PointsController {
+    constructor(private readonly pointService: PointsService) { }
 
     @Post()
     async addUser(
-     @Body('timeArrive') timeArrive : string,
-     @Body('timeDeparture') timeDeparture : string,
-     @Body('cpf') cpf: string,
-     ) {
+        @Body('timeArrive') timeArrive: string,
+        @Body('timeDeparture') timeDeparture: string,
+        @Body('cpf') cpf: string,
+    ) {
         const generetedId = await this.pointService.insertPoint(timeArrive, timeDeparture, cpf);
-        
-        return {id: generetedId};
+
+        return { id: generetedId };
     }
 
     @Get()
-    async getAllUsers(){
+    async getAllUsers() {
         const users = await this.pointService.getPoint();
         return users;
     }
 
     @Get(':cpf')
-    getUser(@Param('cpf') userCpf : string){
-        return this.pointService.getSinglePoint(userCpf);
+    getPoint(@Param('cpf') PointCpf: string) {
+        return this.pointService.getSinglePoint(PointCpf);
     }
 
-    @Put(':cpf')
-    async updateUser(
+    @Get(':cpf/open')
+    getPointOpen(@Param('cpf') PointCpf: string) {
+        return this.pointService.getSinglePointOpen(PointCpf);
+    }
+
+    /*@Put(':cpf')
+    async updatePoint(
         @Body('timeArrive') timeArrive : string,
         @Body('timeDeparture') timeDeparture : string,
         @Param('cpf') cpf : string,
         ){
             await this.pointService.updatePoint(timeArrive, timeDeparture, cpf);
             return null;
+        }*/
+
+    @Put(':cpf/open')
+    async closePoint(
+        @Body('timeArrive') timeArrive: string,
+        @Body('timeDeparture') timeDeparture: string,
+        @Param('cpf') cpf: string,
+    ) {
+        await this.pointService.closePoint(timeDeparture, cpf);
+        return null;
+    }
+    /*
+    @Put(':cpf')
+    async updatePoint(
+        @Body('timeArrive') timeArrive : string,
+        @Body('timeDeparture') timeDeparture : string,
+        @Param('cpf') cpf : string,
+        ){
+            await this.pointService.updatePoint(timeArrive, cpf);
+            return null;
         }
+        */
 
     @Delete(':cpf')
     async removeProduct(
-        @Param('cpf') userId : string,
-    ){
+        @Param('cpf') userId: string,
+    ) {
         await this.pointService.deletePoint(userId);
         return null;
     }

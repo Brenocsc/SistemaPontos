@@ -9,7 +9,7 @@ export class PointsService {
     constructor(@InjectModel('Point') private readonly pointModel: Model<Point>) { }
 
     async insertPoint(timeArrive: string, timeDeparture: string, cpf: string) {
-        
+
         const newPoint = new this.pointModel({
             timeArrive,
             timeDeparture,
@@ -30,14 +30,24 @@ export class PointsService {
     }
 
     async getSinglePoint(cpf: string) {
+        //const point = await this.pointModel.find({cpf}).exec();
         const point = await this.findPoint(cpf);
+        return point.map((point) => ({
+            timeArrive: point.timeArrive,
+            timeDeparture: point.timeDeparture,
+            cpf: point.cpf,
+        }));
+    }
+
+    async getSinglePointOpen(cpf: string) {
+        const point = await this.findPointOpen(cpf);
         return {
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
             cpf: point.cpf,
         };
     }
-
+    /*
     async updatePoint(timeArrive: string, timeDeparture: string, cpf: string) {  
         const updatedPoint = await this.findPoint(cpf);
         if(timeArrive){
@@ -53,28 +63,71 @@ export class PointsService {
         updatedPoint.save();    
         
     }
+    */
+    /*
+    async updatePoint(timeArrive: string, cpf: string) {
+        const updatedPoint = await this.findPoint(cpf);
+        if (timeArrive) {
+            updatedPoint.timeArrive = timeArrive;
+        }
+        if (timeDeparture) {
+            updatedPoint.timeDeparture = timeDeparture;
+        }
+        if (cpf) {
+            updatedPoint.cpf = cpf;
+        }
+
+        updatedPoint.save();
+
+    }
+    */
+
+    async closePoint(timeDeparture: string, cpf: string) {
+        const updatedPoint = await this.findPointOpen(cpf);
+        if (timeDeparture) {
+            updatedPoint.timeDeparture = timeDeparture;
+        }
+
+        updatedPoint.save();
+
+    }
 
 
     async deletePoint(cpf: string) {
-        const result = await this.pointModel.deleteOne({cpf}).exec();
+        const result = await this.pointModel.deleteOne({ cpf }).exec();
 
-        if(result.n === 0){
+        if (result.n === 0) {
             throw new NotFoundException("Could not find user");
         }
     }
 
-    private async findPoint(cpf: string): Promise<Point> {
+    private async findPoint(cpf: string): Promise<any> {
+        let point;
+        try {
+            //user = await this.userModel.findById(cpf).exec();
+            point = await this.pointModel.find({ cpf }).exec();
+        } catch (error) {
+            throw new NotFoundException("Could not find point");
+        }
+
+        if (!point) {
+            throw new NotFoundException("Could not find point");
+        }
+
+        return point;
+    }
+
+    private async findPointOpen(cpf: string): Promise<Point> {
         let point;
 
         try {
-            //user = await this.userModel.findById(cpf).exec();
-            point = await this.pointModel.findOne({cpf}).exec();
+            point = await this.pointModel.findOne({ cpf, timeDeparture: null }).exec();
         } catch (error) {
-            throw new NotFoundException("Could not find user");
+            throw new NotFoundException("Could not find point opened");
         }
 
-        if(!point){
-            throw new NotFoundException("Could not find user");
+        if (!point) {
+            throw new NotFoundException("Could not find point opened");
         }
 
         return point;

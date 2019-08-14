@@ -38,22 +38,24 @@ let PointsService = class PointsService {
     }
     async getSinglePoint(cpf) {
         const point = await this.findPoint(cpf);
+        return point.map((point) => ({
+            timeArrive: point.timeArrive,
+            timeDeparture: point.timeDeparture,
+            cpf: point.cpf,
+        }));
+    }
+    async getSinglePointOpen(cpf) {
+        const point = await this.findPointOpen(cpf);
         return {
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
             cpf: point.cpf,
         };
     }
-    async updatePoint(timeArrive, timeDeparture, cpf) {
-        const updatedPoint = await this.findPoint(cpf);
-        if (timeArrive) {
-            updatedPoint.timeArrive = timeArrive;
-        }
+    async closePoint(timeDeparture, cpf) {
+        const updatedPoint = await this.findPointOpen(cpf);
         if (timeDeparture) {
             updatedPoint.timeDeparture = timeDeparture;
-        }
-        if (cpf) {
-            updatedPoint.cpf = cpf;
         }
         updatedPoint.save();
     }
@@ -66,13 +68,26 @@ let PointsService = class PointsService {
     async findPoint(cpf) {
         let point;
         try {
-            point = await this.pointModel.findOne({ cpf }).exec();
+            point = await this.pointModel.find({ cpf }).exec();
         }
         catch (error) {
-            throw new common_1.NotFoundException("Could not find user");
+            throw new common_1.NotFoundException("Could not find point");
         }
         if (!point) {
-            throw new common_1.NotFoundException("Could not find user");
+            throw new common_1.NotFoundException("Could not find point");
+        }
+        return point;
+    }
+    async findPointOpen(cpf) {
+        let point;
+        try {
+            point = await this.pointModel.findOne({ cpf, timeDeparture: null }).exec();
+        }
+        catch (error) {
+            throw new common_1.NotFoundException("Could not find point opened");
+        }
+        if (!point) {
+            throw new common_1.NotFoundException("Could not find point opened");
         }
         return point;
     }
