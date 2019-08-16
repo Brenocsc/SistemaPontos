@@ -49,12 +49,20 @@ export class PointsService {
                     " / hora: " + new Date(point.timeDeparture).getHours() +
                     ":" + new Date(point.timeDeparture).getMinutes()
         ),
+=======
+                this.formatDate(point.timeArrive)
+            ), 
+            timeDeparture: (
+                this.formatDate(point.timeDeparture)
+            ), 
+>>>>>>> c89636dcc7e509573bbb6b93e4b362839d9dd936
             cpf: point.cpf,
     }));
 
         return { Points }
     }
 
+<<<<<<< HEAD
 async getSinglePointOpen(cpf: string) {
     const point = await this.findPointOpen(cpf);
     return {
@@ -69,6 +77,30 @@ async updatePoint(timeArrive: string, timeDeparture: string, cpf: string) {
     const updatedPoint = await this.findPoint(cpf);
     if(timeArrive){
         updatedPoint.timeArrive = timeArrive;
+=======
+    async formatDate(d: Date){
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if(d !== null){
+            return (
+                "data: " + new Date(d).getDay() +
+                " " + months[new Date(d).getMonth()] + 
+                " " + new Date(d).getFullYear() +
+                " / hora: " + new Date(d).getHours() +
+                ":" + new Date(d).getMinutes()
+            )
+        }
+        return null;
+    }
+
+    async getSinglePointOpen(cpf: string) {
+        const point = await this.findPointOpen(cpf);
+        return {
+            _id: point._id,
+            timeArrive: point.timeArrive,
+            timeDeparture: point.timeDeparture,
+            cpf: point.cpf,
+        };
+>>>>>>> c89636dcc7e509573bbb6b93e4b362839d9dd936
     }
     if(timeDeparture){
         updatedPoint.timeDeparture = timeDeparture;
