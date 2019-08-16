@@ -13,6 +13,7 @@ export declare class PointsService {
     getSinglePoint(cpf: string): Promise<{
         Points: any;
     }>;
+    formatDate(d: Date): string;
     getSinglePointOpen(cpf: string): Promise<{
         _id: any;
         timeArrive: string;

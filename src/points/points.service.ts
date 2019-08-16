@@ -34,19 +34,15 @@ export class PointsService {
         const point = await this.findPoint(cpf);
         const Points = point.map((point) => ({
             _id: point._id,
-            timeArrive: (
-                this.formatDate(point.timeArrive)
-            ), 
-            timeDeparture: (
-                this.formatDate(point.timeDeparture)
-            ), 
+            timeArrive: this.formatDate(point.timeArrive),
+            timeDeparture: this.formatDate(point.timeDeparture),
             cpf: point.cpf,
         }));
 
         return { Points }
     }
 
-    async formatDate(d: Date){
+    formatDate(d: Date){
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         if(d !== null){
             return (
