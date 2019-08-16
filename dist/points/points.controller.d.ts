@@ -21,6 +21,6 @@ export declare class PointsController {
         cpf: string;
     }>;
     closePoint(timeDeparture: string, cpf: string): Promise<any>;
-    updatePoint(pointId: string, cpf: string, newTimeArrive: string, newTimeDeparture: string): Promise<any>;
+    updatePoint(pointId: string, timeArrive: string, timeDeparture: string): Promise<any>;
     removeProduct(userId: string): Promise<any>;
 }

@@ -38,11 +38,20 @@ let PointsService = class PointsService {
         }));
     }
     async getSinglePoint(cpf) {
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const point = await this.findPoint(cpf);
         const Points = point.map((point) => ({
             _id: point._id,
-            timeArrive: point.timeArrive,
-            timeDeparture: point.timeDeparture,
+            timeArrive: ("data: " + new Date(point.timeArrive).getDay() +
+                " " + months[new Date(point.timeArrive).getMonth()] +
+                " " + new Date(point.timeArrive).getFullYear() +
+                " / hora: " + new Date(point.timeArrive).getHours() +
+                ":" + new Date(point.timeArrive).getMinutes()),
+            timeDeparture: ("data: " + new Date(point.timeDeparture).getDay() +
+                " " + months[new Date(point.timeDeparture).getMonth()] +
+                " " + new Date(point.timeDeparture).getFullYear() +
+                " / hora: " + new Date(point.timeDeparture).getHours() +
+                ":" + new Date(point.timeDeparture).getMinutes()),
             cpf: point.cpf,
         }));
         return { Points };
@@ -56,13 +65,13 @@ let PointsService = class PointsService {
             cpf: point.cpf,
         };
     }
-    async updatePoint(id, cpf, newTimeArrive, newTimeDeparture) {
-        const updatedPoint = await this.findPointArrive(id, cpf);
-        if (newTimeArrive) {
-            updatedPoint.timeArrive = newTimeArrive;
+    async updatePoint(id, timeArrive, timeDeparture) {
+        const updatedPoint = await this.findPointArrive(id);
+        if (timeArrive) {
+            updatedPoint.timeArrive = timeArrive;
         }
-        if (newTimeDeparture) {
-            updatedPoint.timeDeparture = newTimeDeparture;
+        if (timeDeparture) {
+            updatedPoint.timeDeparture = timeDeparture;
         }
         updatedPoint.save();
     }
@@ -105,10 +114,10 @@ let PointsService = class PointsService {
         }
         return point;
     }
-    async findPointArrive(id, cpf) {
+    async findPointArrive(id) {
         let point;
         try {
-            point = await this.pointModel.findOne({ cpf, _id: id }).exec();
+            point = await this.pointModel.findOne({ _id: id }).exec();
         }
         catch (error) {
             throw new common_1.NotFoundException("Could not find point opened");

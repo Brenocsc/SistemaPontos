@@ -31,12 +31,24 @@ export class PointsService {
     }
 
     async getSinglePoint(cpf: string) {
-        //const point = await this.pointModel.find({cpf}).exec();
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const point = await this.findPoint(cpf);
         const Points = point.map((point) => ({
             _id: point._id,
-            timeArrive: point.timeArrive,
-            timeDeparture: point.timeDeparture,
+            timeArrive: (
+                "data: " + new Date(point.timeArrive).getDay() +
+                " " + months[new Date(point.timeArrive).getMonth()] + 
+                " " + new Date(point.timeArrive).getFullYear() +
+                " / hora: " + new Date(point.timeArrive).getHours() +
+                ":" + new Date(point.timeArrive).getMinutes()
+            ), 
+            timeDeparture: (
+                "data: " + new Date(point.timeDeparture).getDay() +
+                " " + months[new Date(point.timeDeparture).getMonth()] + 
+                " " + new Date(point.timeDeparture).getFullYear() +
+                " / hora: " + new Date(point.timeDeparture).getHours() +
+                ":" + new Date(point.timeDeparture).getMinutes()
+            ), 
             cpf: point.cpf,
         }));
 
@@ -70,25 +82,15 @@ export class PointsService {
     }
     */
 
-    async updatePoint(id: string, cpf: string, newTimeArrive: string, newTimeDeparture: string) {
-        const updatedPoint = await this.findPointArrive(id, cpf);
-        /*
-        updatedPoint.map((point) => {
-            if (timeArrive) {
+    async updatePoint(id: string, timeArrive: string, timeDeparture: string) {
+        const updatedPoint = await this.findPointArrive(id);
 
-                if (point.timeArrive === timeArrive) {
-                    updatedPoint.timeArrive = timeArrive;
-                }
-            }
-        });
-        */
-
-        if(newTimeArrive){
-            updatedPoint.timeArrive = newTimeArrive;
+        if(timeArrive){
+            updatedPoint.timeArrive = timeArrive;
         }
 
-        if(newTimeDeparture){
-            updatedPoint.timeDeparture = newTimeDeparture;
+        if(timeDeparture){
+            updatedPoint.timeDeparture = timeDeparture;
         }
 
         updatedPoint.save();
@@ -146,11 +148,11 @@ export class PointsService {
         return point;
     }
 
-    private async findPointArrive(id: string, cpf: string): Promise<Point> {
+    private async findPointArrive(id: string): Promise<Point> {
         let point;
 
         try {
-            point = await this.pointModel.findOne({ cpf, _id: id }).exec();
+            point = await this.pointModel.findOne({ _id: id }).exec();
         } catch (error) {
             throw new NotFoundException("Could not find point opened");
         }

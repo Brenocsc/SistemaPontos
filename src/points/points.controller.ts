@@ -52,14 +52,13 @@ export class PointsController {
         return null;
     }
     
-    @Put(':cpf/:id')
+    @Put(':id')
     async updatePoint(
         @Param('id') pointId : string,
-        @Param('cpf') cpf : string,
-        @Body('newTimeArrive') newTimeArrive: string,
-        @Body('newTimeDeparture') newTimeDeparture: string,
+        @Body('timeArrive') timeArrive: string,
+        @Body('timeDeparture') timeDeparture: string,
         ){
-            await this.pointService.updatePoint(pointId, cpf, newTimeArrive, newTimeDeparture);
+            await this.pointService.updatePoint(pointId, timeArrive, timeDeparture);
             return null;
         }
         
