@@ -31,28 +31,33 @@ export class PointsService {
     }
 
     async getSinglePoint(cpf: string) {
-        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const point = await this.findPoint(cpf);
         const Points = point.map((point) => ({
             _id: point._id,
             timeArrive: (
-                "data: " + new Date(point.timeArrive).getDay() +
-                " " + months[new Date(point.timeArrive).getMonth()] + 
-                " " + new Date(point.timeArrive).getFullYear() +
-                " / hora: " + new Date(point.timeArrive).getHours() +
-                ":" + new Date(point.timeArrive).getMinutes()
+                this.formatDate(point.timeArrive)
             ), 
             timeDeparture: (
-                "data: " + new Date(point.timeDeparture).getDay() +
-                " " + months[new Date(point.timeDeparture).getMonth()] + 
-                " " + new Date(point.timeDeparture).getFullYear() +
-                " / hora: " + new Date(point.timeDeparture).getHours() +
-                ":" + new Date(point.timeDeparture).getMinutes()
+                this.formatDate(point.timeDeparture)
             ), 
             cpf: point.cpf,
         }));
 
         return { Points }
+    }
+
+    async formatDate(d: Date){
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if(d !== null){
+            return (
+                "data: " + new Date(d).getDay() +
+                " " + months[new Date(d).getMonth()] + 
+                " " + new Date(d).getFullYear() +
+                " / hora: " + new Date(d).getHours() +
+                ":" + new Date(d).getMinutes()
+            )
+        }
+        return null;
     }
 
     async getSinglePointOpen(cpf: string) {
