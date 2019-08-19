@@ -28,11 +28,11 @@ export class PointsController {
         return this.pointService.getSinglePoint(PointCpf);
     }
 
-    @Get(':cpf/:d1/:d2')
+    @Get(':cpf')
     getPointRange(
         @Param('cpf') PointCpf: string,
-        @Param('d1') date1: string,
-        @Param('d2') date2: string,
+        @Body('d1') date1: string,
+        @Body('d2') date2: string,
     ) {
         return this.pointService.getPointRange(PointCpf, date1, date2);
     }

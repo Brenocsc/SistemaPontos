@@ -42,9 +42,10 @@ export class PointsService {
         return { Points }
     }
 
-<<<<<<< HEAD
     async getPointRange(PointCpf: string, date1: string, date2: string){
-        const points = await this.findPointRange(PointCpf, date1, date2)
+        let dateBegin = new Date(date1);
+        let dateEnd = new Date(date2);
+        const points = await this.findPointRange(PointCpf, dateBegin, dateEnd)
         const Points = points.map((point) => ({
             _id: point._id,
             timeArrive: (
@@ -57,20 +58,6 @@ export class PointsService {
         }));
         
         return { Points }
-=======
-    formatDate(d: Date){
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        if(d !== null){
-            return (
-                "data: " + new Date(d).getDay() +
-                " " + months[new Date(d).getMonth()] + 
-                " " + new Date(d).getFullYear() +
-                " / hora: " + new Date(d).getHours() +
-                ":" + new Date(d).getMinutes()
-            )
-        }
-        return null;
->>>>>>> cf11d1369ca137af00ebef9173db17f4e63cbb70
     }
 
     async getSinglePointOpen(cpf: string) {
@@ -128,12 +115,14 @@ export class PointsService {
     private formatDate(d: Date){
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         if(d !== null){
+            let hora = new Date(d).getHours();
+            let min = new Date(d).getMinutes();
             return (
                 "data: " + new Date(d).getDate() +
                 " " + months[new Date(d).getMonth()] + 
                 " " + new Date(d).getFullYear() +
-                " / hora: " + new Date(d).getHours() +
-                ":" + new Date(d).getMinutes()
+                " / hora: " + ("0" + hora).slice(-2) +
+                ":" + ("0" + min).slice(-2)
             )
         }
         return " - ";
@@ -186,7 +175,7 @@ export class PointsService {
         return point;
     }
 
-    private async findPointRange(cpf: string, date1: string, date2: string) {
+    private async findPointRange(cpf: string, date1: Date, date2: Date) {
         let points;
         try {
             points = this.pointModel.find({ timeArrive: { $gte: date1, $lte: date2 } })
