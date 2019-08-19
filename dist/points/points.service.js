@@ -57,6 +57,17 @@ let PointsService = class PointsService {
         }));
         return { Points };
     }
+    formatDate(d) {
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if (d !== null) {
+            return ("data: " + new Date(d).getDay() +
+                " " + months[new Date(d).getMonth()] +
+                " " + new Date(d).getFullYear() +
+                " / hora: " + new Date(d).getHours() +
+                ":" + new Date(d).getMinutes());
+        }
+        return null;
+    }
     async getSinglePointOpen(cpf) {
         const point = await this.findPointOpen(cpf);
         return {

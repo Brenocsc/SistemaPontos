@@ -34,12 +34,8 @@ export class PointsService {
         const point = await this.findPoint(cpf);
         const Points = point.map((point) => ({
             _id: point._id,
-            timeArrive: (
-                this.formatDate(point.timeArrive)
-            ), 
-            timeDeparture: (
-                this.formatDate(point.timeDeparture)
-            ), 
+            timeArrive: this.formatDate(point.timeArrive),
+            timeDeparture: this.formatDate(point.timeDeparture),
             cpf: point.cpf,
         }));
 

@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { PointsModule } from './points/points.module';
 
 @Module({
-  imports: [PointsModule, UsersModule, MongooseModule.forRoot('mongodb+srv://Breno:db1234@cluster0-qcxlb.mongodb.net/nestjs-demo?retryWrites=true&w=majority')],
+  imports: [PointsModule, UsersModule, MongooseModule.forRoot('mongodb+srv://GabrielHaddad:db1234@cluster0-luvwb.mongodb.net/test?retryWrites=true&w=majority')],
   controllers: [AppController],
   providers: [AppService],
 })
