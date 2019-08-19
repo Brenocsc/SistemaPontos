@@ -18,7 +18,7 @@ let PointsController = class PointsController {
     constructor(pointService) {
         this.pointService = pointService;
     }
-    async addUser(timeArrive, timeDeparture, cpf) {
+    async addPoint(timeArrive, timeDeparture, cpf) {
         const generetedId = await this.pointService.insertPoint(timeArrive, timeDeparture, cpf);
         return { id: generetedId };
     }
@@ -28,6 +28,9 @@ let PointsController = class PointsController {
     }
     getPoint(PointCpf) {
         return this.pointService.getSinglePoint(PointCpf);
+    }
+    getPointRange(PointCpf, date1, date2) {
+        return this.pointService.getPointRange(PointCpf, date1, date2);
     }
     getPointOpen(PointCpf) {
         return this.pointService.getSinglePointOpen(PointCpf);
@@ -51,9 +54,10 @@ __decorate([
     __param(1, common_1.Body('timeDeparture')),
     __param(2, common_1.Body('cpf')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [Date,
+        Date, String]),
     __metadata("design:returntype", Promise)
-], PointsController.prototype, "addUser", null);
+], PointsController.prototype, "addPoint", null);
 __decorate([
     common_1.Get(),
     __metadata("design:type", Function),
@@ -68,6 +72,15 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PointsController.prototype, "getPoint", null);
 __decorate([
+    common_1.Get(':cpf/:d1/:d2'),
+    __param(0, common_1.Param('cpf')),
+    __param(1, common_1.Param('d1')),
+    __param(2, common_1.Param('d2')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", void 0)
+], PointsController.prototype, "getPointRange", null);
+__decorate([
     common_1.Get(':cpf/open'),
     __param(0, common_1.Param('cpf')),
     __metadata("design:type", Function),
@@ -79,7 +92,7 @@ __decorate([
     __param(0, common_1.Body('timeDeparture')),
     __param(1, common_1.Param('cpf')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [Date, String]),
     __metadata("design:returntype", Promise)
 ], PointsController.prototype, "closePoint", null);
 __decorate([
@@ -88,7 +101,8 @@ __decorate([
     __param(1, common_1.Body('timeArrive')),
     __param(2, common_1.Body('timeDeparture')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [String, Date,
+        Date]),
     __metadata("design:returntype", Promise)
 ], PointsController.prototype, "updatePoint", null);
 __decorate([

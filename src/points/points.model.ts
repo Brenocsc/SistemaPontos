@@ -1,13 +1,13 @@
 import * as mongoose from 'mongoose';
 
 export const PointSchema = new mongoose.Schema({
-    timeArrive: { type: String, required: true},
-    timeDeparture: { type: String, required: false},
+    timeArrive: { type: Date, required: true},
+    timeDeparture: { type: Date, required: false},
     cpf: { type: String, required: true},
 });
 
 export interface Point extends mongoose.Document{
-    timeArrive: string,
-    timeDeparture: string,
+    timeArrive: Date,
+    timeDeparture: Date,
     cpf: string,
 }
