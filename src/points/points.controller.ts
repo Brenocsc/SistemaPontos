@@ -7,9 +7,9 @@ export class PointsController {
     constructor(private readonly pointService: PointsService) { }
 
     @Post()
-    async addUser(
-        @Body('timeArrive') timeArrive: string,
-        @Body('timeDeparture') timeDeparture: string,
+    async addPoint(
+        @Body('timeArrive') timeArrive: Date,
+        @Body('timeDeparture') timeDeparture: Date,
         @Body('cpf') cpf: string,
     ) {
         const generetedId = await this.pointService.insertPoint(timeArrive, timeDeparture, cpf);
@@ -28,24 +28,23 @@ export class PointsController {
         return this.pointService.getSinglePoint(PointCpf);
     }
 
+    @Get(':cpf/:d1/:d2')
+    getPointRange(
+        @Param('cpf') PointCpf: string,
+        @Param('d1') date1: string,
+        @Param('d2') date2: string,
+    ) {
+        return this.pointService.getPointRange(PointCpf, date1, date2);
+    }
+
     @Get(':cpf/open')
     getPointOpen(@Param('cpf') PointCpf: string) {
         return this.pointService.getSinglePointOpen(PointCpf);
     }
 
-    /*@Put(':cpf')
-    async updatePoint(
-        @Body('timeArrive') timeArrive : string,
-        @Body('timeDeparture') timeDeparture : string,
-        @Param('cpf') cpf : string,
-        ){
-            await this.pointService.updatePoint(timeArrive, timeDeparture, cpf);
-            return null;
-        }*/
-
     @Put(':cpf/open')
     async closePoint(
-        @Body('timeDeparture') timeDeparture: string,
+        @Body('timeDeparture') timeDeparture: Date,
         @Param('cpf') cpf: string,
     ) {
         await this.pointService.closePoint(timeDeparture, cpf);
@@ -55,13 +54,12 @@ export class PointsController {
     @Put(':id')
     async updatePoint(
         @Param('id') pointId : string,
-        @Body('timeArrive') timeArrive: string,
-        @Body('timeDeparture') timeDeparture: string,
+        @Body('timeArrive') timeArrive: Date,
+        @Body('timeDeparture') timeDeparture: Date,
         ){
             await this.pointService.updatePoint(pointId, timeArrive, timeDeparture);
             return null;
         }
-        
 
     @Delete(':cpf')
     async removeProduct(

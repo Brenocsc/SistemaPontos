@@ -8,7 +8,7 @@ import { Point } from './points.model';
 export class PointsService {
     constructor(@InjectModel('Point') private readonly pointModel: Model<Point>) { }
 
-    async insertPoint(timeArrive: string, timeDeparture: string, cpf: string) {
+    async insertPoint(timeArrive: Date, timeDeparture: Date, cpf: string) {
 
         const newPoint = new this.pointModel({
             timeArrive,
@@ -46,18 +46,20 @@ export class PointsService {
         return { Points }
     }
 
-    async formatDate(d: Date){
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        if(d !== null){
-            return (
-                "data: " + new Date(d).getDay() +
-                " " + months[new Date(d).getMonth()] + 
-                " " + new Date(d).getFullYear() +
-                " / hora: " + new Date(d).getHours() +
-                ":" + new Date(d).getMinutes()
-            )
-        }
-        return null;
+    async getPointRange(PointCpf: string, date1: string, date2: string){
+        const points = await this.findPointRange(PointCpf, date1, date2)
+        const Points = points.map((point) => ({
+            _id: point._id,
+            timeArrive: (
+                this.formatDate(point.timeArrive)
+            ), 
+            timeDeparture: (
+                this.formatDate(point.timeDeparture)
+            ), 
+            cpf: point.cpf,
+        }));
+        
+        return { Points }
     }
 
     async getSinglePointOpen(cpf: string) {
@@ -69,40 +71,32 @@ export class PointsService {
             cpf: point.cpf,
         };
     }
-    /*
-    async updatePoint(timeArrive: string, timeDeparture: string, cpf: string) {  
-        const updatedPoint = await this.findPoint(cpf);
-        if(timeArrive){
-            updatedPoint.timeArrive = timeArrive;
-        }
-        if(timeDeparture){
-            updatedPoint.timeDeparture = timeDeparture;
-        }
-        if(cpf){
-            updatedPoint.cpf = cpf;
-        }
-        
-        updatedPoint.save();    
-        
-    }
-    */
 
-    async updatePoint(id: string, timeArrive: string, timeDeparture: string) {
+    async updatePoint(id: string, timeArrive: Date, timeDeparture: Date) {
         const updatedPoint = await this.findPointArrive(id);
-
+        
         if(timeArrive){
-            updatedPoint.timeArrive = timeArrive;
+            const hour = timeArrive[0] + timeArrive[1]
+            const min = timeArrive[3] + timeArrive[4]
+            const date = new Date(updatedPoint.timeArrive)
+            date.setHours(Number(hour))
+            date.setMinutes(Number(min))
+            updatedPoint.timeArrive = date
         }
 
         if(timeDeparture){
-            updatedPoint.timeDeparture = timeDeparture;
+            const hour = timeDeparture[0] + timeDeparture[1]
+            const min = timeDeparture[3] + timeDeparture[4]
+            const date = new Date(updatedPoint.timeDeparture)
+            date.setHours(Number(hour))
+            date.setMinutes(Number(min))
+            updatedPoint.timeDeparture = date
         }
 
         updatedPoint.save();
     }
 
-
-    async closePoint(timeDeparture: string, cpf: string) {
+    async closePoint(timeDeparture: Date, cpf: string) {
         const updatedPoint = await this.findPointOpen(cpf);
         if (timeDeparture) {
             updatedPoint.timeDeparture = timeDeparture;
@@ -112,7 +106,6 @@ export class PointsService {
 
     }
 
-
     async deletePoint(cpf: string) {
         const result = await this.pointModel.deleteOne({ cpf }).exec();
 
@@ -121,10 +114,23 @@ export class PointsService {
         }
     }
 
+    private formatDate(d: Date){
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if(d !== null){
+            return (
+                "data: " + new Date(d).getDate() +
+                " " + months[new Date(d).getMonth()] + 
+                " " + new Date(d).getFullYear() +
+                " / hora: " + new Date(d).getHours() +
+                ":" + new Date(d).getMinutes()
+            )
+        }
+        return " - ";
+    }
+
     private async findPoint(cpf: string): Promise<any> {
         let point;
         try {
-            //user = await this.userModel.findById(cpf).exec();
             point = await this.pointModel.find({ cpf }).exec();
         } catch (error) {
             throw new NotFoundException("Could not find point");
@@ -169,4 +175,18 @@ export class PointsService {
         return point;
     }
 
+    private async findPointRange(cpf: string, date1: string, date2: string) {
+        let points;
+        try {
+            points = this.pointModel.find({ timeArrive: { $gte: date1, $lte: date2 } })
+        } catch (error) {
+            throw new NotFoundException("Could not find point");
+        }
+
+        if (!points) {
+            throw new NotFoundException("Could not find point");
+        }
+
+        return points;
+    }
 }

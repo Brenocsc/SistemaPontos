@@ -38,20 +38,21 @@ let PointsService = class PointsService {
         }));
     }
     async getSinglePoint(cpf) {
-        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const point = await this.findPoint(cpf);
         const Points = point.map((point) => ({
             _id: point._id,
-            timeArrive: ("data: " + new Date(point.timeArrive).getDay() +
-                " " + months[new Date(point.timeArrive).getMonth()] +
-                " " + new Date(point.timeArrive).getFullYear() +
-                " / hora: " + new Date(point.timeArrive).getHours() +
-                ":" + new Date(point.timeArrive).getMinutes()),
-            timeDeparture: ("data: " + new Date(point.timeDeparture).getDay() +
-                " " + months[new Date(point.timeDeparture).getMonth()] +
-                " " + new Date(point.timeDeparture).getFullYear() +
-                " / hora: " + new Date(point.timeDeparture).getHours() +
-                ":" + new Date(point.timeDeparture).getMinutes()),
+            timeArrive: (this.formatDate(point.timeArrive)),
+            timeDeparture: (this.formatDate(point.timeDeparture)),
+            cpf: point.cpf,
+        }));
+        return { Points };
+    }
+    async getPointRange(PointCpf, date1, date2) {
+        const points = await this.findPointRange(PointCpf, date1, date2);
+        const Points = points.map((point) => ({
+            _id: point._id,
+            timeArrive: (this.formatDate(point.timeArrive)),
+            timeDeparture: (this.formatDate(point.timeDeparture)),
             cpf: point.cpf,
         }));
         return { Points };
@@ -68,10 +69,20 @@ let PointsService = class PointsService {
     async updatePoint(id, timeArrive, timeDeparture) {
         const updatedPoint = await this.findPointArrive(id);
         if (timeArrive) {
-            updatedPoint.timeArrive = timeArrive;
+            const hour = timeArrive[0] + timeArrive[1];
+            const min = timeArrive[3] + timeArrive[4];
+            const date = new Date(updatedPoint.timeArrive);
+            date.setHours(Number(hour));
+            date.setMinutes(Number(min));
+            updatedPoint.timeArrive = date;
         }
         if (timeDeparture) {
-            updatedPoint.timeDeparture = timeDeparture;
+            const hour = timeDeparture[0] + timeDeparture[1];
+            const min = timeDeparture[3] + timeDeparture[4];
+            const date = new Date(updatedPoint.timeDeparture);
+            date.setHours(Number(hour));
+            date.setMinutes(Number(min));
+            updatedPoint.timeDeparture = date;
         }
         updatedPoint.save();
     }
@@ -87,6 +98,17 @@ let PointsService = class PointsService {
         if (result.n === 0) {
             throw new common_1.NotFoundException("Could not find user");
         }
+    }
+    formatDate(d) {
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        if (d !== null) {
+            return ("data: " + new Date(d).getDate() +
+                " " + months[new Date(d).getMonth()] +
+                " " + new Date(d).getFullYear() +
+                " / hora: " + new Date(d).getHours() +
+                ":" + new Date(d).getMinutes());
+        }
+        return " - ";
     }
     async findPoint(cpf) {
         let point;
@@ -126,6 +148,19 @@ let PointsService = class PointsService {
             throw new common_1.NotFoundException("Could not find point opened");
         }
         return point;
+    }
+    async findPointRange(cpf, date1, date2) {
+        let points;
+        try {
+            points = this.pointModel.find({ timeArrive: { $gte: date1, $lte: date2 } });
+        }
+        catch (error) {
+            throw new common_1.NotFoundException("Could not find point");
+        }
+        if (!points) {
+            throw new common_1.NotFoundException("Could not find point");
+        }
+        return points;
     }
 };
 PointsService = __decorate([
