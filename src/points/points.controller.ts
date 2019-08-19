@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param, Put, Delete } from '@nestjs/common';
 
 import { PointsService } from './points.service';
 
@@ -18,23 +18,18 @@ export class PointsController {
     }
 
     @Get()
-    async getAllUsers() {
+    async getAllPoints() {
         const users = await this.pointService.getPoint();
         return users;
     }
-
+    
     @Get(':cpf')
-    getPoint(@Param('cpf') PointCpf: string) {
-        return this.pointService.getSinglePoint(PointCpf);
-    }
-
-    @Get(':cpf/:d1/:d2')
     getPointRange(
-        @Param('cpf') PointCpf: string,
-        @Param('d1') date1: string,
-        @Param('d2') date2: string,
+        @Param('cpf') PointCpf: string,	
+        @Query('d1') date1: string,
+        @Query('d2') date2: string,
     ) {
-        return this.pointService.getPointRange(PointCpf, date1, date2);
+        return this.pointService.getPointCPF(PointCpf, date1, date2);
     }
 
     @Get(':cpf/open')

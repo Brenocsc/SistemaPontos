@@ -22,15 +22,12 @@ let PointsController = class PointsController {
         const generetedId = await this.pointService.insertPoint(timeArrive, timeDeparture, cpf);
         return { id: generetedId };
     }
-    async getAllUsers() {
+    async getAllPoints() {
         const users = await this.pointService.getPoint();
         return users;
     }
-    getPoint(PointCpf) {
-        return this.pointService.getSinglePoint(PointCpf);
-    }
     getPointRange(PointCpf, date1, date2) {
-        return this.pointService.getPointRange(PointCpf, date1, date2);
+        return this.pointService.getPointCPF(PointCpf, date1, date2);
     }
     getPointOpen(PointCpf) {
         return this.pointService.getSinglePointOpen(PointCpf);
@@ -63,19 +60,12 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], PointsController.prototype, "getAllUsers", null);
+], PointsController.prototype, "getAllPoints", null);
 __decorate([
     common_1.Get(':cpf'),
     __param(0, common_1.Param('cpf')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], PointsController.prototype, "getPoint", null);
-__decorate([
-    common_1.Get(':cpf/:d1/:d2'),
-    __param(0, common_1.Param('cpf')),
-    __param(1, common_1.Param('d1')),
-    __param(2, common_1.Param('d2')),
+    __param(1, common_1.Query('d1')),
+    __param(2, common_1.Query('d2')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", void 0)

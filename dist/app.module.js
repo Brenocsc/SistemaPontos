@@ -16,7 +16,7 @@ let AppModule = class AppModule {
 };
 AppModule = __decorate([
     common_1.Module({
-        imports: [points_module_1.PointsModule, users_module_1.UsersModule, mongoose_1.MongooseModule.forRoot('mongodb+srv://GabrielHaddad:db1234@cluster0-luvwb.mongodb.net/test?retryWrites=true&w=majority')],
+        imports: [points_module_1.PointsModule, users_module_1.UsersModule, mongoose_1.MongooseModule.forRoot('mongodb+srv://Breno:db1234@cluster0-qcxlb.mongodb.net/nestjs-demo?retryWrites=true&w=majority')],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

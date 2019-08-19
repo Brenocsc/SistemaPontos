@@ -37,36 +37,27 @@ let PointsService = class PointsService {
             cpf: point.cpf,
         }));
     }
-    async getSinglePoint(cpf) {
-        const point = await this.findPoint(cpf);
-        const Points = point.map((point) => ({
-            _id: point._id,
-            timeArrive: (this.formatDate(point.timeArrive)),
-            timeDeparture: (this.formatDate(point.timeDeparture)),
-            cpf: point.cpf,
-        }));
-        return { Points };
-    }
-    async getPointRange(PointCpf, date1, date2) {
-        const points = await this.findPointRange(PointCpf, date1, date2);
-        const Points = points.map((point) => ({
-            _id: point._id,
-            timeArrive: (this.formatDate(point.timeArrive)),
-            timeDeparture: (this.formatDate(point.timeDeparture)),
-            cpf: point.cpf,
-        }));
-        return { Points };
-    }
-    formatDate(d) {
-        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        if (d !== null) {
-            return ("data: " + new Date(d).getDay() +
-                " " + months[new Date(d).getMonth()] +
-                " " + new Date(d).getFullYear() +
-                " / hora: " + new Date(d).getHours() +
-                ":" + new Date(d).getMinutes());
+    async getPointCPF(cpf, date1, date2) {
+        let Points;
+        if (date1 && date2) {
+            const points = await this.findPointRange(cpf, date1, date2);
+            Points = points.map((point) => ({
+                _id: point._id,
+                timeArrive: (this.formatDate(point.timeArrive)),
+                timeDeparture: (this.formatDate(point.timeDeparture)),
+                cpf: point.cpf,
+            }));
         }
-        return null;
+        else {
+            const point = await this.findPoint(cpf);
+            Points = point.map((point) => ({
+                _id: point._id,
+                timeArrive: this.formatDate(point.timeArrive),
+                timeDeparture: this.formatDate(point.timeDeparture),
+                cpf: point.cpf,
+            }));
+        }
+        return { Points };
     }
     async getSinglePointOpen(cpf) {
         const point = await this.findPointOpen(cpf);
@@ -113,11 +104,13 @@ let PointsService = class PointsService {
     formatDate(d) {
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         if (d !== null) {
+            let hora = new Date(d).getHours();
+            let min = new Date(d).getMinutes();
             return ("data: " + new Date(d).getDate() +
                 " " + months[new Date(d).getMonth()] +
                 " " + new Date(d).getFullYear() +
-                " / hora: " + new Date(d).getHours() +
-                ":" + new Date(d).getMinutes());
+                " / hora: " + ("0" + hora).slice(-2) +
+                ":" + ("0" + min).slice(-2));
         }
         return " - ";
     }
@@ -162,8 +155,9 @@ let PointsService = class PointsService {
     }
     async findPointRange(cpf, date1, date2) {
         let points;
+        process.stdout.write(date1 + date2);
         try {
-            points = this.pointModel.find({ timeArrive: { $gte: date1, $lte: date2 } });
+            points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } });
         }
         catch (error) {
             throw new common_1.NotFoundException("Could not find point");

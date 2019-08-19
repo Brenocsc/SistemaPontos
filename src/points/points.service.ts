@@ -30,31 +30,31 @@ export class PointsService {
         }));
     }
 
-    async getSinglePoint(cpf: string) {
-        const point = await this.findPoint(cpf);
-        const Points = point.map((point) => ({
-            _id: point._id,
-            timeArrive: this.formatDate(point.timeArrive),
-            timeDeparture: this.formatDate(point.timeDeparture),
-            cpf: point.cpf,
-        }));
+    async getPointCPF(cpf: string, date1: string, date2: string){
+        let Points
+        if(date1 && date2){ // data especifica
+            const points = await this.findPointRange(cpf, date1, date2)
+            Points = points.map((point) => ({
+                _id: point._id,
+                timeArrive: (
+                    this.formatDate(point.timeArrive)
+                ), 
+                timeDeparture: (
+                    this.formatDate(point.timeDeparture)
+                ), 
+                cpf: point.cpf,
+            }));
+        }
+        else{ // todos
+            const point = await this.findPoint(cpf);
+            Points = point.map((point) => ({
+                _id: point._id,
+                timeArrive: this.formatDate(point.timeArrive),
+                timeDeparture: this.formatDate(point.timeDeparture),
+                cpf: point.cpf,
+            }));
+        }
 
-        return { Points }
-    }
-
-    async getPointRange(PointCpf: string, date1: string, date2: string){
-        const points = await this.findPointRange(PointCpf, date1, date2)
-        const Points = points.map((point) => ({
-            _id: point._id,
-            timeArrive: (
-                this.formatDate(point.timeArrive)
-            ), 
-            timeDeparture: (
-                this.formatDate(point.timeDeparture)
-            ), 
-            cpf: point.cpf,
-        }));
-        
         return { Points }
     }
 
@@ -113,12 +113,14 @@ export class PointsService {
     private formatDate(d: Date){
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         if(d !== null){
+            let hora = new Date(d).getHours();
+            let min = new Date(d).getMinutes();
             return (
                 "data: " + new Date(d).getDate() +
                 " " + months[new Date(d).getMonth()] + 
                 " " + new Date(d).getFullYear() +
-                " / hora: " + new Date(d).getHours() +
-                ":" + new Date(d).getMinutes()
+                " / hora: " + ("0" + hora).slice(-2) +
+                ":" + ("0" + min).slice(-2)
             )
         }
         return " - ";
@@ -173,8 +175,9 @@ export class PointsService {
 
     private async findPointRange(cpf: string, date1: string, date2: string) {
         let points;
+        process.stdout.write(date1 + date2)
         try {
-            points = this.pointModel.find({ timeArrive: { $gte: date1, $lte: date2 } })
+            points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } })
         } catch (error) {
             throw new NotFoundException("Could not find point");
         }

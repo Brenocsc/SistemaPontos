@@ -10,10 +10,7 @@ export declare class PointsService {
         timeDeparture: Date;
         cpf: string;
     }[]>;
-    getSinglePoint(cpf: string): Promise<{
-        Points: any;
-    }>;
-    getPointRange(PointCpf: string, date1: string, date2: string): Promise<{
+    getPointCPF(cpf: string, date1: string, date2: string): Promise<{
         Points: any;
     }>;
     getSinglePointOpen(cpf: string): Promise<{

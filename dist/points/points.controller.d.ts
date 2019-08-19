@@ -5,15 +5,12 @@ export declare class PointsController {
     addPoint(timeArrive: Date, timeDeparture: Date, cpf: string): Promise<{
         id: string;
     }>;
-    getAllUsers(): Promise<{
+    getAllPoints(): Promise<{
         _id: any;
         timeArrive: Date;
         timeDeparture: Date;
         cpf: string;
     }[]>;
-    getPoint(PointCpf: string): Promise<{
-        Points: any;
-    }>;
     getPointRange(PointCpf: string, date1: string, date2: string): Promise<{
         Points: any;
     }>;
