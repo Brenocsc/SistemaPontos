@@ -23,8 +23,7 @@ export declare class PointsService {
     closePoint(timeDeparture: Date, cpf: string): Promise<void>;
     deletePoint(cpf: string): Promise<void>;
     private formatDate;
-    private findPoint;
     private findPointOpen;
     private findPointArrive;
-    private findPointRange;
+    private findPoint;
 }

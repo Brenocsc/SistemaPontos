@@ -38,25 +38,13 @@ let PointsService = class PointsService {
         }));
     }
     async getPointCPF(cpf, date1, date2) {
-        let Points;
-        if (date1 && date2) {
-            const points = await this.findPointRange(cpf, date1, date2);
-            Points = points.map((point) => ({
-                _id: point._id,
-                timeArrive: (this.formatDate(point.timeArrive)),
-                timeDeparture: (this.formatDate(point.timeDeparture)),
-                cpf: point.cpf,
-            }));
-        }
-        else {
-            const point = await this.findPoint(cpf);
-            Points = point.map((point) => ({
-                _id: point._id,
-                timeArrive: this.formatDate(point.timeArrive),
-                timeDeparture: this.formatDate(point.timeDeparture),
-                cpf: point.cpf,
-            }));
-        }
+        const points = await this.findPoint(cpf, date1, date2);
+        const Points = points.map((point) => ({
+            _id: point._id,
+            timeArrive: this.formatDate(point.timeArrive),
+            timeDeparture: this.formatDate(point.timeDeparture),
+            cpf: point.cpf,
+        }));
         return { Points };
     }
     async getSinglePointOpen(cpf) {
@@ -114,19 +102,6 @@ let PointsService = class PointsService {
         }
         return " - ";
     }
-    async findPoint(cpf) {
-        let point;
-        try {
-            point = await this.pointModel.find({ cpf }).exec();
-        }
-        catch (error) {
-            throw new common_1.NotFoundException("Could not find point");
-        }
-        if (!point) {
-            throw new common_1.NotFoundException("Could not find point");
-        }
-        return point;
-    }
     async findPointOpen(cpf) {
         let point;
         try {
@@ -153,11 +128,13 @@ let PointsService = class PointsService {
         }
         return point;
     }
-    async findPointRange(cpf, date1, date2) {
+    async findPoint(cpf, date1, date2) {
         let points;
-        process.stdout.write(date1 + date2);
         try {
-            points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } });
+            if (date1 && date2)
+                points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } });
+            else
+                points = await this.pointModel.find({ cpf }).exec();
         }
         catch (error) {
             throw new common_1.NotFoundException("Could not find point");

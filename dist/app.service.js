@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 let AppService = class AppService {
     getHello() {
-        return 'Hello World!';
+        return 'Sistema Integrado ao Cora e a um Front End de Marcar Pontos e Cadastro de Funcionários';
     }
 };
 AppService = __decorate([
