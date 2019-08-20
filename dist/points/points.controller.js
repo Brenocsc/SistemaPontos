@@ -26,6 +26,9 @@ let PointsController = class PointsController {
         const users = await this.pointService.getPoint();
         return users;
     }
+    getHours(PointCpf) {
+        return this.pointService.getHoursPoint(PointCpf);
+    }
     getPointRange(PointCpf, date1, date2) {
         return this.pointService.getPointCPF(PointCpf, date1, date2);
     }
@@ -61,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], PointsController.prototype, "getAllPoints", null);
+__decorate([
+    common_1.Get('hourstoday/:cpf'),
+    __param(0, common_1.Param('cpf')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], PointsController.prototype, "getHours", null);
 __decorate([
     common_1.Get(':cpf'),
     __param(0, common_1.Param('cpf')),

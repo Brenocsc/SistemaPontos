@@ -6,13 +6,16 @@ export declare class PointsService {
     insertPoint(timeArrive: Date, timeDeparture: Date, cpf: string): Promise<string>;
     getPoint(): Promise<{
         _id: any;
+        cpf: string;
         timeArrive: Date;
         timeDeparture: Date;
-        cpf: string;
+        hours: string;
     }[]>;
+    getHoursPoint(cpf: string): Promise<void>;
     getPointCPF(cpf: string, date1: string, date2: string): Promise<{
         Points: any;
     }>;
+    private sumTime;
     getSinglePointOpen(cpf: string): Promise<{
         _id: any;
         timeArrive: Date;

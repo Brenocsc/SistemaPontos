@@ -22,7 +22,12 @@ export class PointsController {
         const users = await this.pointService.getPoint();
         return users;
     }
-    
+
+    @Get('hourstoday/:cpf')
+    getHours(@Param('cpf') PointCpf: string) {
+        return this.pointService.getHoursPoint(PointCpf);
+    }
+
     @Get(':cpf')
     getPointRange(
         @Param('cpf') PointCpf: string,	

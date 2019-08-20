@@ -20,6 +20,7 @@ let UsersService = class UsersService {
         this.userModel = userModel;
     }
     async insertUser(nome, cpf, email, pod, telefone) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const newUser = new this.userModel({
             nome,
             cpf,
@@ -41,6 +42,7 @@ let UsersService = class UsersService {
         }));
     }
     async getSingleUser(cpf) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const user = await this.findUser(cpf);
         return {
             nome: user.nome,
@@ -51,6 +53,7 @@ let UsersService = class UsersService {
         };
     }
     async updateUser(nome, cpf, email, pod, telefone) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const updatedUser = await this.findUser(cpf);
         if (nome) {
             updatedUser.nome = nome;
@@ -70,6 +73,7 @@ let UsersService = class UsersService {
         updatedUser.save();
     }
     async deleteUser(cpf) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const result = await this.userModel.deleteOne({ cpf }).exec();
         if (result.n === 0) {
             throw new common_1.NotFoundException("Could not find user");

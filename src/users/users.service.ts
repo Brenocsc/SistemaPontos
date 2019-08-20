@@ -9,7 +9,8 @@ export class UsersService {
     constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
     async insertUser(nome: string, cpf: string, email: string, pod: string, telefone: string) {
-        const newUser = new this.userModel({
+        cpf = cpf.split('-').join('').split('.').join('')
+            const newUser = new this.userModel({
             nome,
             cpf,
             email,
@@ -33,6 +34,7 @@ export class UsersService {
     }
 
     async getSingleUser(cpf: string) {
+        cpf = cpf.split('-').join('').split('.').join('')
         const user = await this.findUser(cpf);
         return {
             nome: user.nome,
@@ -43,7 +45,8 @@ export class UsersService {
         };
     }
 
-    async updateUser(nome: string, cpf: string, email: string, pod: string, telefone: string) {  
+    async updateUser(nome: string, cpf: string, email: string, pod: string, telefone: string) {
+        cpf = cpf.split('-').join('').split('.').join('')
         const updatedUser = await this.findUser(cpf);
         if(nome){
             updatedUser.nome = nome;
@@ -67,6 +70,7 @@ export class UsersService {
 
 
     async deleteUser(cpf: string) {
+        cpf = cpf.split('-').join('').split('.').join('')
         const result = await this.userModel.deleteOne({cpf}).exec();
 
         if(result.n === 0){
@@ -76,7 +80,7 @@ export class UsersService {
 
     private async findUser(cpf: string): Promise<User> {
         let user;
-
+        
         try {
             //user = await this.userModel.findById(cpf).exec();
             user = await this.userModel.findOne({cpf}).exec();

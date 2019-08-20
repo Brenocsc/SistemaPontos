@@ -20,6 +20,7 @@ let PointsService = class PointsService {
         this.pointModel = pointModel;
     }
     async insertPoint(timeArrive, timeDeparture, cpf) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const newPoint = new this.pointModel({
             timeArrive,
             timeDeparture,
@@ -32,22 +33,36 @@ let PointsService = class PointsService {
         const points = await this.pointModel.find().exec();
         return points.map((point) => ({
             _id: point._id,
+            cpf: point.cpf,
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
-            cpf: point.cpf,
+            hours: this.sumTime(point)
         }));
     }
+    async getHoursPoint(cpf) {
+    }
     async getPointCPF(cpf, date1, date2) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const points = await this.findPoint(cpf, date1, date2);
         const Points = points.map((point) => ({
             _id: point._id,
+            cpf: point.cpf,
             timeArrive: this.formatDate(point.timeArrive),
             timeDeparture: this.formatDate(point.timeDeparture),
-            cpf: point.cpf,
+            hours: this.sumTime(point)
         }));
         return { Points };
     }
+    sumTime(point) {
+        if (point.timeDeparture === null)
+            return " - ";
+        const hours = new Date(point.timeDeparture).getHours() - new Date(point.timeArrive).getHours();
+        const mins = new Date(point.timeDeparture).getMinutes() - new Date(point.timeArrive).getMinutes();
+        const time = (hours * 60) + mins;
+        return Math.floor(time / 60) + ":" + ("0" + (time % 60)).slice(-2);
+    }
     async getSinglePointOpen(cpf) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const point = await this.findPointOpen(cpf);
         return {
             _id: point._id,
@@ -77,6 +92,7 @@ let PointsService = class PointsService {
         updatedPoint.save();
     }
     async closePoint(timeDeparture, cpf) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const updatedPoint = await this.findPointOpen(cpf);
         if (timeDeparture) {
             updatedPoint.timeDeparture = timeDeparture;
@@ -84,6 +100,7 @@ let PointsService = class PointsService {
         updatedPoint.save();
     }
     async deletePoint(cpf) {
+        cpf = cpf.split('-').join('').split('.').join('');
         const result = await this.pointModel.deleteOne({ cpf }).exec();
         if (result.n === 0) {
             throw new common_1.NotFoundException("Could not find user");

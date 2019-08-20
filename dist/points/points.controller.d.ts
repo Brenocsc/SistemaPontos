@@ -7,10 +7,12 @@ export declare class PointsController {
     }>;
     getAllPoints(): Promise<{
         _id: any;
+        cpf: string;
         timeArrive: Date;
         timeDeparture: Date;
-        cpf: string;
+        hours: string;
     }[]>;
+    getHours(PointCpf: string): Promise<void>;
     getPointRange(PointCpf: string, date1: string, date2: string): Promise<{
         Points: any;
     }>;

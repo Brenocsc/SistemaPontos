@@ -9,7 +9,7 @@ export class PointsService {
     constructor(@InjectModel('Point') private readonly pointModel: Model<Point>) { }
 
     async insertPoint(timeArrive: Date, timeDeparture: Date, cpf: string) {
-
+        cpf = cpf.split('-').join('').split('.').join('')
         const newPoint = new this.pointModel({
             timeArrive,
             timeDeparture,
@@ -24,25 +24,48 @@ export class PointsService {
         const points = await this.pointModel.find().exec();
         return points.map((point) => ({
             _id: point._id,
+            cpf: point.cpf,
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
-            cpf: point.cpf,
+            hours: this.sumTime(point)
         }));
     }
 
+    async getHoursPoint(cpf: string) {
+        //cpf = cpf.split('-').join('').split('.').join('')
+        //const points = await this.findPoint(cpf, null, null)
+        //return sumTime(points)
+    }
+
     async getPointCPF(cpf: string, date1: string, date2: string){
+        cpf = cpf.split('-').join('').split('.').join('')
         const points = await this.findPoint(cpf, date1, date2)
         const Points = points.map((point) => ({
             _id: point._id,
-            timeArrive: this.formatDate(point.timeArrive), 
-            timeDeparture: this.formatDate(point.timeDeparture), 
             cpf: point.cpf,
+            timeArrive: this.formatDate(point.timeArrive), 
+            timeDeparture: this.formatDate(point.timeDeparture),
+            hours: this.sumTime(point)   
         }));
 
         return { Points }
     }
+    
+    private sumTime(point){
+        //const time = points.map((point) => ({
+            if(point.timeDeparture === null) return " - "
+            
+            const hours = new Date(point.timeDeparture).getHours() - new Date(point.timeArrive).getHours()
+            const mins = new Date(point.timeDeparture).getMinutes() - new Date(point.timeArrive).getMinutes()
+            const time = (hours * 60) + mins 
+
+            return Math.floor(time/60) + ":" + ("0" + (time % 60)).slice(-2)
+        //}));
+            
+    }
 
     async getSinglePointOpen(cpf: string) {
+        cpf = cpf.split('-').join('').split('.').join('')
         const point = await this.findPointOpen(cpf);
         return {
             _id: point._id,
@@ -77,6 +100,7 @@ export class PointsService {
     }
 
     async closePoint(timeDeparture: Date, cpf: string) {
+        cpf = cpf.split('-').join('').split('.').join('')
         const updatedPoint = await this.findPointOpen(cpf);
         if (timeDeparture) {
             updatedPoint.timeDeparture = timeDeparture;
@@ -86,6 +110,7 @@ export class PointsService {
     }
 
     async deletePoint(cpf: string) {
+        cpf = cpf.split('-').join('').split('.').join('')
         const result = await this.pointModel.deleteOne({ cpf }).exec();
 
         if (result.n === 0) {
@@ -143,6 +168,7 @@ export class PointsService {
 
     private async findPoint(cpf: string, date1: string, date2: string) {
         let points;
+
         try {
             if(date1 && date2)
                 points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } })
