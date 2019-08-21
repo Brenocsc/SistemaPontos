@@ -11,11 +11,13 @@ export declare class PointsService {
         timeDeparture: Date;
         hours: string;
     }[]>;
-    getHoursPoint(cpf: string): Promise<void>;
+    getDayHours(cpf: string, currentDate: Date): Promise<string>;
+    private sumMinutes;
+    private sumTime;
+    private sumTimeTotal;
     getPointCPF(cpf: string, date1: string, date2: string): Promise<{
         Points: any;
     }>;
-    private sumTime;
     getSinglePointOpen(cpf: string): Promise<{
         _id: any;
         timeArrive: Date;

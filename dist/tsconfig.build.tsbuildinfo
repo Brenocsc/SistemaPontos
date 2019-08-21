@@ -1138,12 +1138,12 @@
         "signature": "20fd3df854bcb2e2aa1986115044ec9fdefae54037f7a03d734cbcbfa7ae1bae"
       },
       "c:/users/zupper/documents/sistemapontos/src/points/points.service.ts": {
-        "version": "e825d4ceac67b8e7298d4024f3ba9ce3f7805acbd0556db49d1991f0b4f6e97d",
-        "signature": "1803ff00a912c26c1f7d65c0d264c96275893852367bafff1a775d5e6ab49db0"
+        "version": "7a2871d8f7e51a2d0cc966be54b55da8b5dcc91a3bebb45908a6e8ec5db17f43",
+        "signature": "37b629599d0545ac333abeb1b3319e97888ca59522508079b43a2e6dce6856c3"
       },
       "c:/users/zupper/documents/sistemapontos/src/points/points.controller.ts": {
-        "version": "7b3544f65a714e02cdc69112e73136f6dc0eabf6e3c512c1a522650ccb2116d6",
-        "signature": "9d73dbbcfd87a23546509ed3a28b5a64aea0490664c579767a7fc735bd266cb6"
+        "version": "a8b2629381d3fa18a224ed22db2c4bd1b16bc8bb18a69409799f99cdb90095b8",
+        "signature": "7022f040408d4adb5383644d787b0fe63bebbd9aba0aae1a582720922213d10f"
       },
       "c:/users/zupper/documents/sistemapontos/src/points/points.module.ts": {
         "version": "16340a1cb35c99c16a14fffacf20e26d47fe046bb8635dde0fbd8ae775c1cdea",
@@ -5716,6 +5716,9 @@
       "c:/users/zupper/documents/sistemapontos/src/users/users.controller.ts",
       "c:/users/zupper/documents/sistemapontos/src/users/users.module.ts",
       "c:/users/zupper/documents/sistemapontos/src/points/points.model.ts",
+      "c:/users/zupper/documents/sistemapontos/src/points/points.controller.ts",
+      "c:/users/zupper/documents/sistemapontos/src/points/points.module.ts",
+      "c:/users/zupper/documents/sistemapontos/src/app.module.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/adapters/http-adapter.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/adapters/index.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@nestjs/core/constants.d.ts",
@@ -5770,10 +5773,7 @@
       "c:/users/zupper/documents/sistemapontos/node_modules/@types/superagent/index.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@types/supertest/index.d.ts",
       "c:/users/zupper/documents/sistemapontos/node_modules/@types/yargs/index.d.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.service.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.controller.ts",
-      "c:/users/zupper/documents/sistemapontos/src/points/points.module.ts",
-      "c:/users/zupper/documents/sistemapontos/src/app.module.ts"
+      "c:/users/zupper/documents/sistemapontos/src/points/points.service.ts"
     ]
   },
   "version": "3.4.3"

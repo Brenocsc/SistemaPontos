@@ -39,7 +39,29 @@ let PointsService = class PointsService {
             hours: this.sumTime(point)
         }));
     }
-    async getHoursPoint(cpf) {
+    async getDayHours(cpf, currentDate) {
+        cpf = cpf.split('-').join('').split('.').join('');
+        const points = await this.findPoint(cpf, currentDate.toString(), null);
+        return this.sumTimeTotal(points);
+    }
+    sumMinutes(point) {
+        if (point.timeDeparture === null)
+            return 0;
+        const hours = new Date(point.timeDeparture).getHours() - new Date(point.timeArrive).getHours();
+        const mins = new Date(point.timeDeparture).getMinutes() - new Date(point.timeArrive).getMinutes();
+        return (hours * 60) + mins;
+    }
+    sumTime(point) {
+        const minutes = this.sumMinutes(point);
+        if (minutes === 0)
+            return " - ";
+        return Math.floor(minutes / 60) + ":" + ("0" + (minutes % 60)).slice(-2);
+    }
+    sumTimeTotal(points) {
+        const minutes = points.map(this.sumMinutes);
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        const minTotal = minutes.reduce(reducer);
+        return Math.floor(minTotal / 60) + ":" + ("0" + (minTotal % 60)).slice(-2);
     }
     async getPointCPF(cpf, date1, date2) {
         cpf = cpf.split('-').join('').split('.').join('');
@@ -52,14 +74,6 @@ let PointsService = class PointsService {
             hours: this.sumTime(point)
         }));
         return { Points };
-    }
-    sumTime(point) {
-        if (point.timeDeparture === null)
-            return " - ";
-        const hours = new Date(point.timeDeparture).getHours() - new Date(point.timeArrive).getHours();
-        const mins = new Date(point.timeDeparture).getMinutes() - new Date(point.timeArrive).getMinutes();
-        const time = (hours * 60) + mins;
-        return Math.floor(time / 60) + ":" + ("0" + (time % 60)).slice(-2);
     }
     async getSinglePointOpen(cpf) {
         cpf = cpf.split('-').join('').split('.').join('');
@@ -150,6 +164,8 @@ let PointsService = class PointsService {
         try {
             if (date1 && date2)
                 points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } });
+            else if (date1)
+                points = this.pointModel.find({ cpf, timeArrive: { $gte: date1 } });
             else
                 points = await this.pointModel.find({ cpf }).exec();
         }

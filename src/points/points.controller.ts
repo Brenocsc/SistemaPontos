@@ -23,9 +23,12 @@ export class PointsController {
         return users;
     }
 
-    @Get('hourstoday/:cpf')
-    getHours(@Param('cpf') PointCpf: string) {
-        return this.pointService.getHoursPoint(PointCpf);
+    @Get('dayhours/:cpf')
+    getHours(
+        @Param('cpf') PointCpf: string,
+        @Query('current') currentDate: Date
+    ) {
+        return this.pointService.getDayHours(PointCpf, currentDate);
     }
 
     @Get(':cpf')
