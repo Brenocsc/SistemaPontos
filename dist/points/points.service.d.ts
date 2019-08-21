@@ -11,7 +11,16 @@ export declare class PointsService {
         timeDeparture: Date;
         hours: string;
     }[]>;
-    getDayHours(cpf: string, currentDate: Date): Promise<string>;
+    getTotalHours(cpf: string, currentDate: Date): Promise<{
+        timeCompleted: string;
+        timeLeft: string;
+    }>;
+    private workingDays;
+    private formatCalender;
+    getDayHours(cpf: string, currentDate: Date): Promise<{
+        timeCompleted: string;
+        timeLeft: string;
+    }>;
     private sumMinutes;
     private sumTime;
     private sumTimeTotal;
@@ -31,4 +40,5 @@ export declare class PointsService {
     private findPointOpen;
     private findPointArrive;
     private findPoint;
+    private formatCPF;
 }

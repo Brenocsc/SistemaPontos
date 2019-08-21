@@ -36,32 +36,77 @@ let PointsService = class PointsService {
             cpf: point.cpf,
             timeArrive: point.timeArrive,
             timeDeparture: point.timeDeparture,
-            hours: this.sumTime(point)
+            hours: this.sumTime(point, null)
         }));
     }
-    async getDayHours(cpf, currentDate) {
-        cpf = cpf.split('-').join('').split('.').join('');
-        const points = await this.findPoint(cpf, currentDate.toString(), null);
-        return this.sumTimeTotal(points);
+    async getTotalHours(cpf, currentDate) {
+        cpf = this.formatCPF(cpf);
+        const points = await this.findPoint(cpf, null, null);
+        const timeCompleted = this.sumTimeTotal(points, currentDate);
+        const timeLeft = (this.workingDays(points[0].timeArrive, currentDate) * 528) - timeCompleted;
+        return {
+            timeCompleted: Math.floor(timeCompleted / 60) + ":" + ("0" + (timeCompleted % 60)).slice(-2),
+            timeLeft: Math.floor(timeLeft / 60) + ":" + ("0" + (timeLeft % 60)).slice(-2)
+        };
     }
-    sumMinutes(point) {
-        if (point.timeDeparture === null)
-            return 0;
+    workingDays(startDay, endDay) {
+        let totalDays = 0;
+        let varDate = this.formatCalender(startDay);
+        const endDate = this.formatCalender(endDay);
+        while (varDate !== endDate) {
+            if (new Date(varDate).getDay() !== 0 && new Date(varDate).getDay() !== 6) {
+                totalDays += 1;
+            }
+            let auxDate = new Date(varDate);
+            auxDate.setDate(auxDate.getDate() + 1);
+            varDate = this.formatCalender(auxDate);
+        }
+        if (new Date(varDate).getDay() !== 0 && new Date(varDate).getDay() !== 6) {
+            totalDays += 1;
+        }
+        return totalDays;
+    }
+    formatCalender(d) {
+        const dd = String(new Date(d).getDate()).padStart(2, '0');
+        const mm = String(new Date(d).getMonth() + 1).padStart(2, '0');
+        const yyyy = new Date(d).getFullYear();
+        return mm + '/' + dd + '/' + yyyy;
+    }
+    async getDayHours(cpf, currentDate) {
+        cpf = this.formatCPF(cpf);
+        const date = this.formatCalender(currentDate);
+        const points = await this.findPoint(cpf, date, date + " 23:59:59");
+        const timeCompleted = this.sumTimeTotal(points, currentDate);
+        const timeLeft = 528 - timeCompleted;
+        return {
+            timeCompleted: Math.floor(timeCompleted / 60) + ":" + ("0" + (timeCompleted % 60)).slice(-2),
+            timeLeft: Math.floor(timeLeft / 60) + ":" + ("0" + (timeLeft % 60)).slice(-2)
+        };
+    }
+    sumMinutes(point, currentDate) {
+        if (point.timeDeparture === null) {
+            if (currentDate === null)
+                return 0;
+            else {
+                const hours = new Date(currentDate).getHours() - new Date(point.timeArrive).getHours();
+                const mins = new Date(currentDate).getMinutes() - new Date(point.timeArrive).getMinutes();
+                return (hours * 60) + mins;
+            }
+        }
         const hours = new Date(point.timeDeparture).getHours() - new Date(point.timeArrive).getHours();
         const mins = new Date(point.timeDeparture).getMinutes() - new Date(point.timeArrive).getMinutes();
         return (hours * 60) + mins;
     }
-    sumTime(point) {
-        const minutes = this.sumMinutes(point);
+    sumTime(point, currentDate) {
+        const minutes = this.sumMinutes(point, currentDate);
         if (minutes === 0)
             return " - ";
         return Math.floor(minutes / 60) + ":" + ("0" + (minutes % 60)).slice(-2);
     }
-    sumTimeTotal(points) {
-        const minutes = points.map(this.sumMinutes);
+    sumTimeTotal(points, currentDate) {
+        const minutes = points.map((point) => this.sumMinutes(point, currentDate));
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        const minTotal = minutes.reduce(reducer);
-        return Math.floor(minTotal / 60) + ":" + ("0" + (minTotal % 60)).slice(-2);
+        return minutes.reduce(reducer);
     }
     async getPointCPF(cpf, date1, date2) {
         cpf = cpf.split('-').join('').split('.').join('');
@@ -71,12 +116,12 @@ let PointsService = class PointsService {
             cpf: point.cpf,
             timeArrive: this.formatDate(point.timeArrive),
             timeDeparture: this.formatDate(point.timeDeparture),
-            hours: this.sumTime(point)
+            hours: this.sumTime(point, null)
         }));
         return { Points };
     }
     async getSinglePointOpen(cpf) {
-        cpf = cpf.split('-').join('').split('.').join('');
+        cpf = this.formatCPF(cpf);
         const point = await this.findPointOpen(cpf);
         return {
             _id: point._id,
@@ -106,7 +151,7 @@ let PointsService = class PointsService {
         updatedPoint.save();
     }
     async closePoint(timeDeparture, cpf) {
-        cpf = cpf.split('-').join('').split('.').join('');
+        cpf = this.formatCPF(cpf);
         const updatedPoint = await this.findPointOpen(cpf);
         if (timeDeparture) {
             updatedPoint.timeDeparture = timeDeparture;
@@ -114,7 +159,7 @@ let PointsService = class PointsService {
         updatedPoint.save();
     }
     async deletePoint(cpf) {
-        cpf = cpf.split('-').join('').split('.').join('');
+        cpf = this.formatCPF(cpf);
         const result = await this.pointModel.deleteOne({ cpf }).exec();
         if (result.n === 0) {
             throw new common_1.NotFoundException("Could not find user");
@@ -164,8 +209,6 @@ let PointsService = class PointsService {
         try {
             if (date1 && date2)
                 points = this.pointModel.find({ cpf, timeArrive: { $gte: date1, $lte: date2 } });
-            else if (date1)
-                points = this.pointModel.find({ cpf, timeArrive: { $gte: date1 } });
             else
                 points = await this.pointModel.find({ cpf }).exec();
         }
@@ -176,6 +219,9 @@ let PointsService = class PointsService {
             throw new common_1.NotFoundException("Could not find point");
         }
         return points;
+    }
+    formatCPF(cpf) {
+        return cpf.split('-').join('').split('.').join('');
     }
 };
 PointsService = __decorate([
